@@ -232,7 +232,7 @@ const LunaApp = (() => {
       else greeting = 'Buenas noches';
 
       const userName = profile.name ? `, ${profile.name}` : '';
-      greetingEl.textContent = `${greeting}${userName} ✨`;
+      greetingEl.textContent = `${greeting}${userName}`;
     }
 
     if (dateTodayEl) {
@@ -729,7 +729,7 @@ const LunaApp = (() => {
     const clearBtn = document.getElementById('btnClearAllData');
     if (clearBtn) {
       clearBtn.addEventListener('click', () => {
-        if (confirm('⚠️ ATENCIÓN: Esta acción borrará permanentemente todos tus períodos, síntomas, notas y configuración en este navegador. ¿Deseas continuar?')) {
+        if (confirm('ATENCIÓN: Esta acción borrará permanentemente todos tus períodos, síntomas, notas y configuración en este navegador. ¿Deseas continuar?')) {
           if (confirm('¿Confirmas de manera definitiva el borrado total de tus datos?')) {
             LunaStorage.clearAllData();
             showToast('Todos los datos han sido eliminados.', 'info');

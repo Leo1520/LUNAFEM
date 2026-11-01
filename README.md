@@ -1,10 +1,10 @@
-# 🌸 LunaFem — Seguimiento Menstrual y Bienestar Femenino
+# LunaFem — Seguimiento Menstrual y Bienestar Femenino
 
 LunaFem es una aplicación web progresiva (PWA) moderna, delicada y privada diseñada para que las mujeres puedan registrar, comprender y seguir su ciclo menstrual, estimar su ventana fértil y ovulación, monitorear síntomas corporales, registrar su bienestar emocional y consultar estadísticas personales.
 
 ---
 
-## ✨ Características Principales
+## Características Principales
 
 1. **Dashboard y Anillo Interactivo del Ciclo**:
    - Saludo personalizado según la hora del día.
@@ -13,17 +13,17 @@ LunaFem es una aplicación web progresiva (PWA) moderna, delicada y privada dise
    - Accesos directos y resumen de actividad reciente.
 
 2. **Calendario Menstrual con Indicadores Visuales**:
-   - **🩷 Punto rosa relleno**: Menstruación confirmada y registrada.
+   - **Punto rosa relleno**: Menstruación confirmada y registrada.
    - **Punto rosa delineado**: Menstruación futura estimada.
-   - **♡ Corazón lila delineado**: Días estimados de la ventana fértil.
-   - **♥ Corazón morado relleno**: Día estimado de ovulación (con animación sutil).
-   - **• Punto ámbar secundario**: Síntomas y notas guardadas ese día.
+   - **Corazón lila delineado (Bootstrap Icons bi-heart)**: Días estimados de la ventana fértil.
+   - **Corazón morado relleno (Bootstrap Icons bi-heart-fill)**: Día estimado de ovulación (con animación sutil).
+   - **Punto ámbar secundario**: Síntomas y notas guardadas ese día.
    - Navegación mes a mes, botón "Ir a hoy" y modal de detalle para consultar, editar o eliminar registros de cualquier fecha.
 
 3. **Registro Diario Multifunción (+)**:
    - **Menstruación**: Fecha de inicio, fecha de fin opcional (admite períodos en curso), intensidad de flujo (ligero, moderado, abundante) y notas.
-   - **Síntomas Corporales**: Selector múltiple con etiquetas interactivas (cólicos, dolor de cabeza, hinchazón, sensibilidad en senos, cansancio, acné, dolor lumbar, náuseas, etc.), escala de intensidad de 1 a 5 y notas.
-   - **Estado de Ánimo y Bienestar**: Selección intuitiva de estado emocional con emojis discretos (Feliz, Tranquila, Neutral, Triste, Ansiosa, Irritable, Sensible), nivel de energía (1 a 5), calidad del descanso nocturno y reflexiones personales.
+   - **Síntomas Corporales**: Selector múltiple con iconos de Bootstrap (cólicos, dolor de cabeza, hinchazón, sensibilidad en senos, cansancio, acné, dolor lumbar, náuseas, etc.), escala de intensidad de 1 a 5 y notas.
+   - **Estado de Ánimo y Bienestar**: Selección intuitiva de estado emocional con iconos de Bootstrap (Feliz, Tranquila, Neutral, Triste, Ansiosa, Irritable, Sensible), nivel de energía (1 a 5), calidad del descanso nocturno y reflexiones personales.
 
 4. **Historial de Ciclos**:
    - Registro cronológico de todos los ciclos anteriores con fecha de inicio, fin y duración total de sangrado.
@@ -49,7 +49,7 @@ LunaFem es una aplicación web progresiva (PWA) moderna, delicada y privada dise
 
 ---
 
-## 🛠️ Tecnologías Empleadas
+## Tecnologías Empleadas
 
 - **HTML5** semántico.
 - **CSS3** puro con sistema de diseño pastel y diseño adaptable (Mobile-First y Desktop).
@@ -61,7 +61,7 @@ LunaFem es una aplicación web progresiva (PWA) moderna, delicada y privada dise
 
 ---
 
-## 📁 Estructura del Proyecto
+## Estructura del Proyecto
 
 ```text
 LunaFem/
@@ -83,7 +83,7 @@ LunaFem/
 
 ---
 
-## 🚀 Cómo Ejecutar Localmente
+## Cómo Ejecutar Localmente
 
 ### Opción 1: Abrir directamente el archivo
 Haz doble clic sobre el archivo `index.html` en tu explorador de archivos para abrirlo en cualquier navegador web moderno (Google Chrome, Mozilla Firefox, Edge, Safari, etc.).
@@ -100,7 +100,7 @@ Si usas Laragon o XAMPP, simplemente ubica la carpeta en `laragon/www/LUNAFEM` y
 
 ---
 
-## 🌐 Guía para Publicar Gratuitamente en GitHub Pages
+## Guía para Publicar Gratuitamente en GitHub Pages
 
 1. **Crear una cuenta o iniciar sesión en GitHub**:
    Ingresa a [github.com](https://github.com/).
@@ -135,7 +135,7 @@ Si usas Laragon o XAMPP, simplemente ubica la carpeta en `laragon/www/LUNAFEM` y
 
 ---
 
-## 🔒 Aviso de Privacidad y Responsabilidad Médica
+## Aviso de Privacidad y Responsabilidad Médica
 
 - **Privacidad absoluta**: Todos los datos ingresados se quedan únicamente en el navegador del dispositivo donde se utiliza la aplicación. LunaFem no recopila, no rastrea ni transmite ningún tipo de información personal o biométrica.
 - **Aviso de salud**: Las estimaciones de días fértiles, ovulación y próximas menstruaciones son cálculos matemáticos y aproximaciones informativas. No son un método anticonceptivo ni sustituyen la consulta, evaluación o criterio de un profesional de la salud o ginecología.

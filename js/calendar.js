@@ -201,19 +201,19 @@ const LunaCalendar = (() => {
       indicatorsBox.appendChild(dot);
     }
 
-    // Indicador 2: Fertilidad y Ovulación (Corazones)
+    // Indicador 2: Fertilidad y Ovulación (Corazones con Bootstrap Icons)
     if (dayInfo.isOvulationPredicted) {
       cell.classList.add('has-ovulation');
       const heartFilled = document.createElement('span');
       heartFilled.className = 'cal-indicator cal-heart-ovulation';
-      heartFilled.innerHTML = '♥';
+      heartFilled.innerHTML = '<i class="bi bi-heart-fill"></i>';
       heartFilled.title = 'Ovulación estimada';
       indicatorsBox.appendChild(heartFilled);
     } else if (dayInfo.isFertilePredicted) {
       cell.classList.add('has-fertile');
       const heartOutline = document.createElement('span');
       heartOutline.className = 'cal-indicator cal-heart-fertile';
-      heartOutline.innerHTML = '♡';
+      heartOutline.innerHTML = '<i class="bi bi-heart"></i>';
       heartOutline.title = 'Ventana fértil estimada';
       indicatorsBox.appendChild(heartOutline);
     }
@@ -317,13 +317,24 @@ const LunaCalendar = (() => {
         cravings: 'Antojos'
       };
 
+      let starsHtml = '';
+      for (let star = 1; star <= 5; star++) {
+        starsHtml += star <= symptoms.intensity 
+          ? '<i class="bi bi-star-fill text-warning me-1"></i>' 
+          : '<i class="bi bi-star text-muted me-1"></i>';
+      }
+
       const tags = symptoms.types.map(t => `<span class="symptom-tag">${symptomLabels[t] || t}</span>`).join(' ');
       symptomsContainer.innerHTML = `
         <div class="mb-2">
           <strong>Síntomas:</strong>
           <div class="d-flex flex-wrap gap-1 mt-1">${tags}</div>
         </div>
-        <div class="small text-muted mb-1">Intensidad: ${'★'.repeat(symptoms.intensity)}${'☆'.repeat(5 - symptoms.intensity)} (${symptoms.intensity}/5)</div>
+        <div class="small text-muted mb-1 d-flex align-items-center">
+          <span class="me-2">Intensidad:</span>
+          <span>${starsHtml}</span>
+          <span class="ms-1">(${symptoms.intensity}/5)</span>
+        </div>
         ${symptoms.notes ? `<div class="small fst-italic p-2 bg-light rounded text-secondary">"${symptoms.notes}"</div>` : ''}
       `;
     } else {
@@ -333,14 +344,14 @@ const LunaCalendar = (() => {
     // Estado de ánimo y bienestar
     const moodContainer = document.getElementById('modalMoodContainer');
     if (mood) {
-      const moodEmojis = {
-        happy: '😊 Feliz',
-        calm: '😌 Tranquila',
-        neutral: '😐 Neutral',
-        sad: '😢 Triste',
-        anxious: '😰 Ansiosa',
-        irritable: '😤 Irritable',
-        sensitive: '🥺 Sensible'
+      const moodIcons = {
+        happy: '<i class="bi bi-emoji-smile text-success me-1"></i> Feliz',
+        calm: '<i class="bi bi-emoji-sunglasses text-primary me-1"></i> Tranquila',
+        neutral: '<i class="bi bi-emoji-neutral text-secondary me-1"></i> Neutral',
+        sad: '<i class="bi bi-emoji-frown text-info me-1"></i> Triste',
+        anxious: '<i class="bi bi-emoji-dizzy text-warning me-1"></i> Ansiosa',
+        irritable: '<i class="bi bi-emoji-angry text-danger me-1"></i> Irritable',
+        sensitive: '<i class="bi bi-emoji-tear text-purple me-1"></i> Sensible'
       };
       const sleepLabels = {
         good: 'Sueño reparador',
@@ -350,7 +361,7 @@ const LunaCalendar = (() => {
 
       moodContainer.innerHTML = `
         <div class="d-flex align-items-center gap-2 mb-1">
-          <span class="fs-5">${moodEmojis[mood.mood] || mood.mood}</span>
+          <span class="fw-semibold">${moodIcons[mood.mood] || mood.mood}</span>
           <span class="badge bg-light text-dark border">Energía: ${mood.energy}/5</span>
         </div>
         <div class="small text-muted">${sleepLabels[mood.sleepQuality] || ''}</div>

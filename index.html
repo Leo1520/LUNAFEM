@@ -57,7 +57,7 @@
       <!-- Tarjeta de Saludo y Fecha -->
       <div class="d-flex justify-content-between align-items-center mb-3 px-1">
         <div>
-          <h2 class="h4 mb-0 fw-bold" id="userGreeting">Hola ✨</h2>
+          <h2 class="h4 mb-0 fw-bold" id="userGreeting">Hola</h2>
           <span class="text-secondary small fw-medium" id="dashboardDateToday">Cargando fecha...</span>
         </div>
         <button class="btn btn-sm btn-light border rounded-circle shadow-sm" data-nav-view="profile" title="Ajustes de perfil" style="width: 38px; height: 38px;">
@@ -205,11 +205,11 @@
             <span>Menstruación estimada</span>
           </div>
           <div class="legend-item">
-            <span class="cal-heart-fertile">♡</span>
+            <span class="cal-heart-fertile"><i class="bi bi-heart"></i></span>
             <span>Ventana fértil</span>
           </div>
           <div class="legend-item">
-            <span class="cal-heart-ovulation">♥</span>
+            <span class="cal-heart-ovulation"><i class="bi bi-heart-fill"></i></span>
             <span>Ovulación</span>
           </div>
           <div class="legend-item">
@@ -223,7 +223,7 @@
       <div class="luna-card mt-3 p-3">
         <h6 class="fw-bold mb-1"><i class="bi bi-info-circle text-purple me-1"></i> ¿Cómo interpretar el calendario?</h6>
         <p class="small text-muted mb-0">
-          Toca cualquier día para consultar o añadir detalles. Los corazones lila <strong>♡</strong> indican tu ventana de alta fertilidad calculada y el corazón morado <strong>♥</strong> señala el día de máxima probabilidad ovulatoria aproximada.
+          Toca cualquier día para consultar o añadir detalles. Los corazones lila (<i class="bi bi-heart text-purple"></i>) indican tu ventana de alta fertilidad calculada y el corazón morado (<i class="bi bi-heart-fill text-purple"></i>) señala el día de máxima probabilidad ovulatoria aproximada.
         </p>
       </div>
     </section>
@@ -307,17 +307,17 @@
               <div class="mb-3">
                 <label class="form-label small fw-bold text-secondary">Selecciona los síntomas experimentados</label>
                 <div class="symptom-chip-grid">
-                  <div class="symptom-chip" data-symptom="cramps">🩸 Cólicos</div>
-                  <div class="symptom-chip" data-symptom="headache">🤕 Dolor de cabeza</div>
-                  <div class="symptom-chip" data-symptom="bloating">🎈 Hinchazón</div>
-                  <div class="symptom-chip" data-symptom="breast_tenderness">🌸 Sensib. en senos</div>
-                  <div class="symptom-chip" data-symptom="fatigue">😴 Cansancio</div>
-                  <div class="symptom-chip" data-symptom="acne">✨ Acné</div>
-                  <div class="symptom-chip" data-symptom="lower_back_pain">⚡ Dolor lumbar</div>
-                  <div class="symptom-chip" data-symptom="nausea">🤢 Náuseas</div>
-                  <div class="symptom-chip" data-symptom="mood_swings">🎭 Cambios de humor</div>
-                  <div class="symptom-chip" data-symptom="anxiety">💭 Ansiedad</div>
-                  <div class="symptom-chip" data-symptom="cravings">🍫 Antojos dulces</div>
+                  <div class="symptom-chip" data-symptom="cramps"><i class="bi bi-droplet-half text-danger"></i> Cólicos</div>
+                  <div class="symptom-chip" data-symptom="headache"><i class="bi bi-bandaid text-purple"></i> Dolor de cabeza</div>
+                  <div class="symptom-chip" data-symptom="bloating"><i class="bi bi-pie-chart text-warning"></i> Hinchazón</div>
+                  <div class="symptom-chip" data-symptom="breast_tenderness"><i class="bi bi-flower1 text-pink"></i> Sensib. en senos</div>
+                  <div class="symptom-chip" data-symptom="fatigue"><i class="bi bi-battery text-secondary"></i> Cansancio</div>
+                  <div class="symptom-chip" data-symptom="acne"><i class="bi bi-stars text-warning"></i> Acné</div>
+                  <div class="symptom-chip" data-symptom="lower_back_pain"><i class="bi bi-lightning-charge text-danger"></i> Dolor lumbar</div>
+                  <div class="symptom-chip" data-symptom="nausea"><i class="bi bi-virus text-success"></i> Náuseas</div>
+                  <div class="symptom-chip" data-symptom="mood_swings"><i class="bi bi-masks-theater text-primary"></i> Cambios de humor</div>
+                  <div class="symptom-chip" data-symptom="anxiety"><i class="bi bi-cloud-lightning-rain text-secondary"></i> Ansiedad</div>
+                  <div class="symptom-chip" data-symptom="cravings"><i class="bi bi-cake2 text-pink"></i> Antojos dulces</div>
                 </div>
               </div>
 
@@ -357,31 +357,31 @@
                 <label class="form-label small fw-bold text-secondary">¿Cómo te sientes hoy?</label>
                 <div class="mood-picker-grid">
                   <div class="mood-btn" data-mood="happy">
-                    <span class="mood-emoji">😊</span>
+                    <span class="mood-icon"><i class="bi bi-emoji-smile text-success"></i></span>
                     <span class="mood-label">Feliz</span>
                   </div>
                   <div class="mood-btn selected" data-mood="calm">
-                    <span class="mood-emoji">😌</span>
+                    <span class="mood-icon"><i class="bi bi-emoji-sunglasses text-primary"></i></span>
                     <span class="mood-label">Tranquila</span>
                   </div>
                   <div class="mood-btn" data-mood="neutral">
-                    <span class="mood-emoji">😐</span>
+                    <span class="mood-icon"><i class="bi bi-emoji-neutral text-secondary"></i></span>
                     <span class="mood-label">Neutral</span>
                   </div>
                   <div class="mood-btn" data-mood="sad">
-                    <span class="mood-emoji">😢</span>
+                    <span class="mood-icon"><i class="bi bi-emoji-frown text-info"></i></span>
                     <span class="mood-label">Triste</span>
                   </div>
                   <div class="mood-btn" data-mood="anxious">
-                    <span class="mood-emoji">😰</span>
+                    <span class="mood-icon"><i class="bi bi-emoji-dizzy text-warning"></i></span>
                     <span class="mood-label">Ansiosa</span>
                   </div>
                   <div class="mood-btn" data-mood="irritable">
-                    <span class="mood-emoji">😤</span>
+                    <span class="mood-icon"><i class="bi bi-emoji-angry text-danger"></i></span>
                     <span class="mood-label">Irritable</span>
                   </div>
                   <div class="mood-btn" data-mood="sensitive">
-                    <span class="mood-emoji">🥺</span>
+                    <span class="mood-icon"><i class="bi bi-emoji-tear text-purple"></i></span>
                     <span class="mood-label">Sensible</span>
                   </div>
                 </div>
@@ -398,9 +398,9 @@
               <div class="mb-3">
                 <label for="logSleepQuality" class="form-label small fw-bold text-secondary">Calidad del sueño</label>
                 <select class="form-select rounded-3" id="logSleepQuality">
-                  <option value="good">Descanso reparador y profundo 💤</option>
-                  <option value="average">Normal / Regular 🛏️</option>
-                  <option value="poor">Insomnio o despertares frecuentes 🥱</option>
+                  <option value="good">Descanso reparador y profundo</option>
+                  <option value="average">Normal / Regular</option>
+                  <option value="poor">Insomnio o despertares frecuentes</option>
                 </select>
               </div>
 
@@ -644,7 +644,7 @@
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content">
         <div class="modal-header border-0 pb-0">
-          <h2 class="h5 modal-title fw-bold" id="onboardTitle">Bienvenida a LunaFem ✨</h2>
+          <h2 class="h5 modal-title fw-bold" id="onboardTitle">Bienvenida a LunaFem</h2>
         </div>
         <div class="modal-body pt-3">
           <!-- Indicador de pasos -->
@@ -713,7 +713,7 @@
             </div>
             <div class="d-flex gap-2">
               <button type="button" class="btn btn-light border w-50" id="onboardPrev3">Atrás</button>
-              <button type="button" class="btn btn-luna-primary w-50" id="onboardFinish">Comenzar ✨</button>
+              <button type="button" class="btn btn-luna-primary w-50" id="onboardFinish">Comenzar <i class="bi bi-arrow-right ms-1"></i></button>
             </div>
           </div>
         </div>
