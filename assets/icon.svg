@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FFF0F5"/>
+      <stop offset="100%" stop-color="#F5F3FF"/>
+    </linearGradient>
+    <linearGradient id="lunaGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#EC4899"/>
+      <stop offset="50%" stop-color="#D8B4FE"/>
+      <stop offset="100%" stop-color="#8B5CF6"/>
+    </linearGradient>
+    <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="10" result="blur" />
+      <feComposite in="SourceGraphic" in2="blur" operator="over" />
+    </filter>
+  </defs>
+
+  <!-- Fondo redondeado suave -->
+  <rect width="512" height="512" rx="128" fill="url(#bgGrad)"/>
+  
+  <!-- Luna creciente estilizada con brillo -->
+  <path d="M 330 110 C 240 110 160 180 160 270 C 160 360 230 425 320 425 C 345 425 368 420 390 410 C 310 400 240 330 240 255 C 240 180 290 125 365 112 C 354 110 342 110 330 110 Z" fill="url(#lunaGrad)" filter="url(#glow)"/>
+
+  <!-- Estrellas y destellos decorativos -->
+  <!-- Estrella 1 -->
+  <path d="M 380 180 Q 380 200 400 200 Q 380 200 380 220 Q 380 200 360 200 Q 380 200 380 180 Z" fill="#EC4899"/>
+  <!-- Estrella 2 pequeña -->
+  <path d="M 180 150 Q 180 162 192 162 Q 180 162 180 174 Q 180 162 168 162 Q 180 162 180 150 Z" fill="#8B5CF6"/>
+  <!-- Estrella 3 -->
+  <circle cx="395" cy="280" r="6" fill="#D8B4FE"/>
+  <!-- Corazón flotante sutil -->
+  <path d="M 200 330 C 200 320 215 310 225 325 C 235 310 250 320 250 330 C 250 345 225 360 225 360 C 225 360 200 345 200 330 Z" fill="#EC4899" opacity="0.85"/>
+</svg>

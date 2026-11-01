@@ -1,0 +1,783 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>LunaFem - Seguimiento Menstrual y Bienestar Femenino</title>
+  <meta name="description" content="Aplicación web premium de seguimiento del ciclo menstrual, estimación de días fértiles, registro de síntomas y estadísticas de bienestar femenino.">
+  <meta name="theme-color" content="#FFF9FC">
+
+  <!-- Manifest PWA -->
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" type="image/svg+xml" href="assets/icon.svg">
+  <link rel="apple-touch-icon" href="assets/icon-192.png">
+
+  <!-- Bootstrap 5.3 CSS & Bootstrap Icons -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- LunaFem Custom CSS -->
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+  <!-- Contenedor de Notificaciones Toast Flotante -->
+  <div class="luna-toast-container" id="toastContainer" aria-live="polite" aria-atomic="true"></div>
+
+  <!-- Vista Principal Centralizada -->
+  <main class="app-viewport">
+
+    <!-- Header Superior de la Aplicación -->
+    <header class="app-header">
+      <div class="brand-badge">
+        <div class="brand-logo-icon">
+          <i class="bi bi-moon-stars-fill"></i>
+        </div>
+        <div>
+          <h1 class="brand-name">LunaFem</h1>
+          <p class="brand-subtitle">Bienestar & Ciclo Femenino</p>
+        </div>
+      </div>
+      <div class="d-flex align-items-center gap-2">
+        <button type="button" class="btn btn-sm btn-luna-outline rounded-pill px-3" data-nav-view="history" title="Historial de ciclos">
+          <i class="bi bi-clock-history me-1"></i> Historial
+        </button>
+      </div>
+    </header>
+
+    <!-- ========================================================
+         VISTA 1: INICIO / DASHBOARD
+         ======================================================== -->
+    <section class="app-view active" id="view-home">
+      <!-- Tarjeta de Saludo y Fecha -->
+      <div class="d-flex justify-content-between align-items-center mb-3 px-1">
+        <div>
+          <h2 class="h4 mb-0 fw-bold" id="userGreeting">Hola ✨</h2>
+          <span class="text-secondary small fw-medium" id="dashboardDateToday">Cargando fecha...</span>
+        </div>
+        <button class="btn btn-sm btn-light border rounded-circle shadow-sm" data-nav-view="profile" title="Ajustes de perfil" style="width: 38px; height: 38px;">
+          <i class="bi bi-person-fill text-purple"></i>
+        </button>
+      </div>
+
+      <!-- Tarjeta Principal: Círculo Interactivo del Ciclo -->
+      <div class="luna-card gradient-card text-center mb-3">
+        <div class="cycle-circle-container">
+          <div class="cycle-circle-wrapper">
+            <svg class="cycle-svg-ring" viewBox="0 0 220 220">
+              <defs>
+                <linearGradient id="cycleGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stop-color="#EC4899" />
+                  <stop offset="60%" stop-color="#D8B4FE" />
+                  <stop offset="100%" stop-color="#8B5CF6" />
+                </linearGradient>
+              </defs>
+              <!-- Círculo de fondo -->
+              <circle class="cycle-ring-bg" cx="110" cy="110" r="98"></circle>
+              <!-- Círculo de progreso dinámico -->
+              <circle class="cycle-ring-progress" id="cycleRingProgress" cx="110" cy="110" r="98" stroke-dasharray="615.75" stroke-dashoffset="615.75"></circle>
+            </svg>
+
+            <!-- Contenido centralizado del anillo -->
+            <div class="cycle-circle-content">
+              <span class="cycle-day-label">Día del ciclo</span>
+              <span class="cycle-day-number" id="dashboardCycleDayNum">1</span>
+              <span class="cycle-phase-tag" id="dashboardPhaseTag">
+                <i class="bi bi-droplet-half"></i> Fase Menstrual
+              </span>
+            </div>
+          </div>
+          <p class="text-muted small mt-3 px-3 mb-0" id="dashboardPhaseDesc">
+            Tu ciclo avanza de manera natural. Recuerda escuchar a tu cuerpo.
+          </p>
+        </div>
+
+        <!-- Métricas Rápidas en Cuadrícula -->
+        <div class="row g-2 mt-2 pt-3 border-top border-light">
+          <div class="col-4">
+            <div class="p-2 rounded bg-white border border-light">
+              <span class="d-block small text-muted">Próximo</span>
+              <strong class="d-block text-pink small" id="dashNextPeriodDate">--</strong>
+            </div>
+          </div>
+          <div class="col-4">
+            <div class="p-2 rounded bg-white border border-light">
+              <span class="d-block small text-muted">Tiempo</span>
+              <strong class="d-block text-purple small" id="dashDaysUntilNext">--</strong>
+            </div>
+          </div>
+          <div class="col-4">
+            <div class="p-2 rounded bg-white border border-light">
+              <span class="d-block small text-muted">Ventana Fértil</span>
+              <strong class="d-block text-dark small" id="dashFertileWindow">--</strong>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Accesos Rápidos -->
+      <div class="d-flex gap-2 mb-3">
+        <button class="btn btn-luna-primary flex-grow-1" id="quickLogPeriodBtn">
+          <i class="bi bi-droplet-fill"></i> Registrar Menstruación
+        </button>
+        <button class="btn btn-luna-outline flex-grow-1" id="quickLogSymptomsBtn">
+          <i class="bi bi-heart-pulse"></i> Registrar Síntomas
+        </button>
+      </div>
+
+      <!-- Tarjeta: Síntomas Registrados Recientemente -->
+      <div class="luna-card mb-3">
+        <div class="d-flex justify-content-between align-items-center mb-2">
+          <h3 class="card-title-delicate mb-0">
+            <i class="bi bi-journal-check"></i> Actividad Reciente
+          </h3>
+          <button class="btn btn-sm btn-link text-pink text-decoration-none p-0 small fw-semibold" data-nav-view="log">
+            + Añadir
+          </button>
+        </div>
+        <div id="dashboardRecentSymptoms">
+          <!-- Renderizado dinámico desde app.js -->
+        </div>
+      </div>
+
+      <!-- Banner de Acceso al Calendario -->
+      <div class="luna-card p-3 d-flex align-items-center justify-content-between" style="background: linear-gradient(135deg, #FDF2F8 0%, #FAF5FF 100%);">
+        <div class="d-flex align-items-center gap-3">
+          <div class="rounded-circle bg-white shadow-sm p-3 text-purple d-flex align-items-center justify-content-center" style="width: 48px; height: 48px;">
+            <i class="bi bi-calendar3 fs-5"></i>
+          </div>
+          <div>
+            <h6 class="mb-0 fw-bold">Calendario Menstrual</h6>
+            <span class="small text-muted">Visualiza puntitos rosa y corazones de fertilidad</span>
+          </div>
+        </div>
+        <button class="btn btn-sm btn-luna-primary rounded-circle p-2" id="quickCalendarBtn" title="Ir al calendario">
+          <i class="bi bi-chevron-right"></i>
+        </button>
+      </div>
+
+      <!-- Aviso médico permanente -->
+      <div class="medical-disclaimer">
+        <i class="bi bi-shield-check"></i>
+        <div>
+          <strong>Aviso de bienestar:</strong> Las predicciones son aproximaciones matemáticas basadas en tus registros previos y no constituyen asesoramiento médico ni deben utilizarse como método anticonceptivo.
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================================
+         VISTA 2: CALENDARIO MENSTRUAL PREMIUM
+         ======================================================== -->
+    <section class="app-view" id="view-calendar">
+      <div class="calendar-wrapper">
+        <!-- Navegación del mes -->
+        <div class="calendar-header">
+          <button type="button" class="cal-nav-btn" id="calPrevMonth" aria-label="Mes anterior">
+            <i class="bi bi-chevron-left"></i>
+          </button>
+          <div class="text-center">
+            <h2 class="calendar-title" id="calMonthTitle">Noviembre 2026</h2>
+            <button type="button" class="btn btn-sm btn-link text-decoration-none text-purple p-0 small" id="calTodayBtn">
+              Ir a hoy
+            </button>
+          </div>
+          <button type="button" class="cal-nav-btn" id="calNextMonth" aria-label="Mes siguiente">
+            <i class="bi bi-chevron-right"></i>
+          </button>
+        </div>
+
+        <!-- Grilla de días generada dinámicamente -->
+        <div id="calGrid"></div>
+
+        <!-- Leyenda compacta y obligatoria -->
+        <div class="calendar-legend">
+          <div class="legend-item">
+            <span class="cal-dot-period-real"></span>
+            <span>Menstruación real</span>
+          </div>
+          <div class="legend-item">
+            <span class="cal-dot-period-pred"></span>
+            <span>Menstruación estimada</span>
+          </div>
+          <div class="legend-item">
+            <span class="cal-heart-fertile">♡</span>
+            <span>Ventana fértil</span>
+          </div>
+          <div class="legend-item">
+            <span class="cal-heart-ovulation">♥</span>
+            <span>Ovulación</span>
+          </div>
+          <div class="legend-item">
+            <span class="cal-dot-notes"></span>
+            <span>Síntomas / Notas</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Explicación de la ventana fértil y ovulación -->
+      <div class="luna-card mt-3 p-3">
+        <h6 class="fw-bold mb-1"><i class="bi bi-info-circle text-purple me-1"></i> ¿Cómo interpretar el calendario?</h6>
+        <p class="small text-muted mb-0">
+          Toca cualquier día para consultar o añadir detalles. Los corazones lila <strong>♡</strong> indican tu ventana de alta fertilidad calculada y el corazón morado <strong>♥</strong> señala el día de máxima probabilidad ovulatoria aproximada.
+        </p>
+      </div>
+    </section>
+
+    <!-- ========================================================
+         VISTA 3: REGISTRO (+)
+         ======================================================== -->
+    <section class="app-view" id="view-log">
+      <div class="luna-card">
+        <h2 class="h5 fw-bold mb-3 d-flex align-items-center gap-2">
+          <i class="bi bi-plus-circle-fill text-pink"></i> Registrar Información
+        </h2>
+
+        <!-- Pestañas de Registro -->
+        <ul class="nav nav-pills nav-fill mb-3 gap-1 bg-light p-1 rounded-pill" id="log-tabs" role="tablist">
+          <li class="nav-item" role="presentation">
+            <button class="nav-link active rounded-pill small py-2 fw-semibold" id="tab-period-btn" data-bs-toggle="pill" data-bs-target="#tab-log-period" type="button" role="tab">
+              <i class="bi bi-droplet-fill me-1"></i> Período
+            </button>
+          </li>
+          <li class="nav-item" role="presentation">
+            <button class="nav-link rounded-pill small py-2 fw-semibold" id="tab-symptoms-btn" data-bs-toggle="pill" data-bs-target="#tab-log-symptoms" type="button" role="tab">
+              <i class="bi bi-heart-pulse-fill me-1"></i> Síntomas
+            </button>
+          </li>
+          <li class="nav-item" role="presentation">
+            <button class="nav-link rounded-pill small py-2 fw-semibold" id="tab-mood-btn" data-bs-toggle="pill" data-bs-target="#tab-log-mood" type="button" role="tab">
+              <i class="bi bi-emoji-smile-fill me-1"></i> Ánimo
+            </button>
+          </li>
+        </ul>
+
+        <div class="tab-content" id="logTabContent">
+          <!-- SUB-FORM 1: Menstruación -->
+          <div class="tab-pane fade show active" id="tab-log-period" role="tabpanel">
+            <form id="formLogPeriod">
+              <div class="mb-3">
+                <label for="logPeriodStartDate" class="form-label small fw-bold text-secondary">Fecha de inicio *</label>
+                <input type="date" class="form-control rounded-3" id="logPeriodStartDate" required>
+              </div>
+
+              <div class="mb-3">
+                <label for="logPeriodEndDate" class="form-label small fw-bold text-secondary">Fecha de finalización (opcional si está en curso)</label>
+                <input type="date" class="form-control rounded-3" id="logPeriodEndDate">
+                <div class="form-text small">Déjala vacía si tu menstruación sigue activa hoy.</div>
+              </div>
+
+              <div class="mb-3">
+                <label class="form-label small fw-bold text-secondary d-block">Intensidad del sangrado</label>
+                <div class="btn-group w-100" role="group">
+                  <input type="radio" class="btn-check" name="logFlowIntensity" id="flowLight" value="light">
+                  <label class="btn btn-outline-secondary small py-2" for="flowLight">Ligero</label>
+
+                  <input type="radio" class="btn-check" name="logFlowIntensity" id="flowModerate" value="moderate" checked>
+                  <label class="btn btn-outline-secondary small py-2" for="flowModerate">Moderado</label>
+
+                  <input type="radio" class="btn-check" name="logFlowIntensity" id="flowHeavy" value="heavy">
+                  <label class="btn btn-outline-secondary small py-2" for="flowHeavy">Abundante</label>
+                </div>
+              </div>
+
+              <div class="mb-3">
+                <label for="logPeriodNotes" class="form-label small fw-bold text-secondary">Notas personales</label>
+                <textarea class="form-control rounded-3" id="logPeriodNotes" rows="2" placeholder="Observaciones sobre tu flujo o sensaciones..."></textarea>
+              </div>
+
+              <button type="submit" class="btn btn-luna-primary w-100">
+                <i class="bi bi-check-lg"></i> Guardar Período
+              </button>
+            </form>
+          </div>
+
+          <!-- SUB-FORM 2: Síntomas -->
+          <div class="tab-pane fade" id="tab-log-symptoms" role="tabpanel">
+            <form id="formLogSymptoms">
+              <div class="mb-3">
+                <label for="logSymptomDate" class="form-label small fw-bold text-secondary">Fecha del registro *</label>
+                <input type="date" class="form-control rounded-3" id="logSymptomDate" required>
+              </div>
+
+              <div class="mb-3">
+                <label class="form-label small fw-bold text-secondary">Selecciona los síntomas experimentados</label>
+                <div class="symptom-chip-grid">
+                  <div class="symptom-chip" data-symptom="cramps">🩸 Cólicos</div>
+                  <div class="symptom-chip" data-symptom="headache">🤕 Dolor de cabeza</div>
+                  <div class="symptom-chip" data-symptom="bloating">🎈 Hinchazón</div>
+                  <div class="symptom-chip" data-symptom="breast_tenderness">🌸 Sensib. en senos</div>
+                  <div class="symptom-chip" data-symptom="fatigue">😴 Cansancio</div>
+                  <div class="symptom-chip" data-symptom="acne">✨ Acné</div>
+                  <div class="symptom-chip" data-symptom="lower_back_pain">⚡ Dolor lumbar</div>
+                  <div class="symptom-chip" data-symptom="nausea">🤢 Náuseas</div>
+                  <div class="symptom-chip" data-symptom="mood_swings">🎭 Cambios de humor</div>
+                  <div class="symptom-chip" data-symptom="anxiety">💭 Ansiedad</div>
+                  <div class="symptom-chip" data-symptom="cravings">🍫 Antojos dulces</div>
+                </div>
+              </div>
+
+              <div class="mb-3">
+                <div class="d-flex justify-content-between align-items-center">
+                  <label for="logSymptomIntensity" class="form-label small fw-bold text-secondary mb-0">Intensidad global</label>
+                  <span class="badge bg-light text-purple border"><span id="intensityDisplay">2</span> / 5</span>
+                </div>
+                <input type="range" class="form-range" min="1" max="5" value="2" id="logSymptomIntensity" oninput="document.getElementById('intensityDisplay').textContent = this.value">
+                <div class="d-flex justify-content-between small text-muted">
+                  <span>Leve</span>
+                  <span>Moderado</span>
+                  <span>Severo</span>
+                </div>
+              </div>
+
+              <div class="mb-3">
+                <label for="logSymptomNotes" class="form-label small fw-bold text-secondary">Detalles adicionales</label>
+                <input type="text" class="form-control rounded-3" id="logSymptomNotes" placeholder="Remedios tomados, hora del día...">
+              </div>
+
+              <button type="submit" class="btn btn-luna-primary w-100">
+                <i class="bi bi-check-lg"></i> Guardar Síntomas
+              </button>
+            </form>
+          </div>
+
+          <!-- SUB-FORM 3: Estado de Ánimo y Bienestar -->
+          <div class="tab-pane fade" id="tab-log-mood" role="tabpanel">
+            <form id="formLogMood">
+              <div class="mb-3">
+                <label for="logMoodDate" class="form-label small fw-bold text-secondary">Fecha *</label>
+                <input type="date" class="form-control rounded-3" id="logMoodDate" required>
+              </div>
+
+              <div class="mb-3">
+                <label class="form-label small fw-bold text-secondary">¿Cómo te sientes hoy?</label>
+                <div class="mood-picker-grid">
+                  <div class="mood-btn" data-mood="happy">
+                    <span class="mood-emoji">😊</span>
+                    <span class="mood-label">Feliz</span>
+                  </div>
+                  <div class="mood-btn selected" data-mood="calm">
+                    <span class="mood-emoji">😌</span>
+                    <span class="mood-label">Tranquila</span>
+                  </div>
+                  <div class="mood-btn" data-mood="neutral">
+                    <span class="mood-emoji">😐</span>
+                    <span class="mood-label">Neutral</span>
+                  </div>
+                  <div class="mood-btn" data-mood="sad">
+                    <span class="mood-emoji">😢</span>
+                    <span class="mood-label">Triste</span>
+                  </div>
+                  <div class="mood-btn" data-mood="anxious">
+                    <span class="mood-emoji">😰</span>
+                    <span class="mood-label">Ansiosa</span>
+                  </div>
+                  <div class="mood-btn" data-mood="irritable">
+                    <span class="mood-emoji">😤</span>
+                    <span class="mood-label">Irritable</span>
+                  </div>
+                  <div class="mood-btn" data-mood="sensitive">
+                    <span class="mood-emoji">🥺</span>
+                    <span class="mood-label">Sensible</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="mb-3">
+                <div class="d-flex justify-content-between align-items-center">
+                  <label for="logEnergyLevel" class="form-label small fw-bold text-secondary mb-0">Nivel de energía</label>
+                  <span class="badge bg-light text-purple border"><span id="energyDisplay">3</span> / 5</span>
+                </div>
+                <input type="range" class="form-range" min="1" max="5" value="3" id="logEnergyLevel" oninput="document.getElementById('energyDisplay').textContent = this.value">
+              </div>
+
+              <div class="mb-3">
+                <label for="logSleepQuality" class="form-label small fw-bold text-secondary">Calidad del sueño</label>
+                <select class="form-select rounded-3" id="logSleepQuality">
+                  <option value="good">Descanso reparador y profundo 💤</option>
+                  <option value="average">Normal / Regular 🛏️</option>
+                  <option value="poor">Insomnio o despertares frecuentes 🥱</option>
+                </select>
+              </div>
+
+              <div class="mb-3">
+                <label for="logMoodNotes" class="form-label small fw-bold text-secondary">Reflexión o nota personal</label>
+                <textarea class="form-control rounded-3" id="logMoodNotes" rows="2" placeholder="Escribe lo que quieras expresar..."></textarea>
+              </div>
+
+              <button type="submit" class="btn btn-luna-primary w-100">
+                <i class="bi bi-check-lg"></i> Guardar Bienestar
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================================
+         VISTA 4: HISTORIAL DE CICLOS
+         ======================================================== -->
+    <section class="app-view" id="view-history">
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2 class="h5 fw-bold mb-0">Historial de Ciclos</h2>
+        <button class="btn btn-sm btn-luna-primary" onclick="LunaApp.switchView('log')">
+          <i class="bi bi-plus-lg"></i> Nuevo Registro
+        </button>
+      </div>
+
+      <div id="historyListContainer">
+        <!-- Renderizado dinámico desde app.js -->
+      </div>
+    </section>
+
+    <!-- ========================================================
+         VISTA 5: ESTADÍSTICAS Y GRÁFICOS (CHART.JS)
+         ======================================================== -->
+    <section class="app-view" id="view-stats">
+      <h2 class="h5 fw-bold mb-3">Tus Estadísticas</h2>
+
+      <!-- Resumen Métrico Superior -->
+      <div class="row g-2 mb-3">
+        <div class="col-6 col-md-3">
+          <div class="metric-card">
+            <div class="metric-val" id="statAvgCycle">28 días</div>
+            <div class="metric-lbl">Media del Ciclo</div>
+          </div>
+        </div>
+        <div class="col-6 col-md-3">
+          <div class="metric-card">
+            <div class="metric-val" id="statAvgPeriod">5 días</div>
+            <div class="metric-lbl">Media Menstrual</div>
+          </div>
+        </div>
+        <div class="col-6 col-md-3">
+          <div class="metric-card">
+            <div class="metric-val" id="statTotalCycles">0</div>
+            <div class="metric-lbl">Ciclos Guardados</div>
+          </div>
+        </div>
+        <div class="col-6 col-md-3">
+          <div class="metric-card">
+            <div class="metric-val fs-5" id="statRegularity">Regular</div>
+            <div class="metric-lbl">Regularidad</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Gráfico 1: Duración de Ciclos -->
+      <div class="luna-card mb-3">
+        <h3 class="card-title-delicate">
+          <i class="bi bi-graph-up text-purple"></i> Duración de los Ciclos (Días)
+        </h3>
+        <div class="chart-container-box">
+          <canvas id="cycleDurationChart"></canvas>
+          <div class="chart-empty-msg" id="cycleChartEmpty">
+            <i class="bi bi-bar-chart-line"></i>
+            <span>Registra al menos 2 periodos consecutivos para graficar la evolución de tus ciclos.</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Gráfico 2: Síntomas Frecuentes -->
+      <div class="luna-card mb-3">
+        <h3 class="card-title-delicate">
+          <i class="bi bi-heart-pulse text-pink"></i> Síntomas Más Habituales
+        </h3>
+        <div class="chart-container-box">
+          <canvas id="symptomsChart"></canvas>
+          <div class="chart-empty-msg" id="symptomsChartEmpty">
+            <i class="bi bi-card-checklist"></i>
+            <span>No hay registros de síntomas para mostrar todavía.</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Gráfico 3 y 4 en columnas -->
+      <div class="row g-3 mb-3">
+        <div class="col-12 col-md-6">
+          <div class="luna-card h-100 mb-0">
+            <h3 class="card-title-delicate">
+              <i class="bi bi-pie-chart text-purple"></i> Estados de Ánimo
+            </h3>
+            <div class="chart-container-box">
+              <canvas id="moodChart"></canvas>
+              <div class="chart-empty-msg" id="moodChartEmpty">
+                <i class="bi bi-emoji-smile"></i>
+                <span>Registra cómo te sientes en la pestaña (+) para ver tu distribución emocional.</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-12 col-md-6">
+          <div class="luna-card h-100 mb-0">
+            <h3 class="card-title-delicate">
+              <i class="bi bi-droplet-half text-pink"></i> Intensidad de Flujo
+            </h3>
+            <div class="chart-container-box">
+              <canvas id="flowChart"></canvas>
+              <div class="chart-empty-msg" id="flowChartEmpty">
+                <i class="bi bi-droplet"></i>
+                <span>Sin registros de flujo suficientes.</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================================
+         VISTA 6: PERFIL, CONFIGURACIÓN Y PRIVACIDAD
+         ======================================================== -->
+    <section class="app-view" id="view-profile">
+      <div class="luna-card mb-3">
+        <h2 class="h5 fw-bold mb-3 d-flex align-items-center gap-2">
+          <i class="bi bi-sliders2 text-purple"></i> Configuración de tu Ciclo
+        </h2>
+        <form id="formProfileSettings">
+          <div class="mb-3">
+            <label for="profileNameInput" class="form-label small fw-bold text-secondary">Nombre o apodo</label>
+            <input type="text" class="form-control rounded-3" id="profileNameInput" placeholder="¿Cómo quieres que te llamemos?">
+          </div>
+
+          <div class="row g-2 mb-3">
+            <div class="col-6">
+              <label for="profileCycleLengthInput" class="form-label small fw-bold text-secondary">Duración habitual del ciclo</label>
+              <div class="input-group">
+                <input type="number" class="form-control rounded-start-3" id="profileCycleLengthInput" min="20" max="45" value="28">
+                <span class="input-group-text rounded-end-3 small">días</span>
+              </div>
+            </div>
+            <div class="col-6">
+              <label for="profilePeriodLengthInput" class="form-label small fw-bold text-secondary">Duración de la menstruación</label>
+              <div class="input-group">
+                <input type="number" class="form-control rounded-start-3" id="profilePeriodLengthInput" min="2" max="10" value="5">
+                <span class="input-group-text rounded-end-3 small">días</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <label for="profileRegularityInput" class="form-label small fw-bold text-secondary">Regularidad de tus ciclos</label>
+            <select class="form-select rounded-3" id="profileRegularityInput">
+              <option value="true">Ciclos regulares (varían 1-3 días)</option>
+              <option value="false">Ciclos irregulares (suelen variar bastante)</option>
+            </select>
+          </div>
+
+          <button type="submit" class="btn btn-luna-primary w-100">
+            <i class="bi bi-save"></i> Guardar Configuración
+          </button>
+        </form>
+      </div>
+
+      <!-- Gestión de Datos y Privacidad -->
+      <div class="luna-card mb-3">
+        <h3 class="card-title-delicate">
+          <i class="bi bi-shield-lock-fill text-pink"></i> Privacidad y Tus Datos
+        </h3>
+        <p class="small text-muted mb-3">
+          En LunaFem tus datos son 100% tuyos. Toda tu información se guarda exclusivamente en tu navegador de forma local (LocalStorage), sin cuentas, sin publicidad y sin enviarla a ningún servidor externo.
+        </p>
+
+        <div class="d-flex flex-column gap-2">
+          <button type="button" class="btn btn-luna-outline w-100 text-start d-flex justify-content-between align-items-center" id="btnExportData">
+            <span><i class="bi bi-download text-purple me-2"></i> Exportar copia de seguridad (JSON)</span>
+            <i class="bi bi-chevron-right small text-muted"></i>
+          </button>
+
+          <label class="btn btn-luna-outline w-100 text-start d-flex justify-content-between align-items-center mb-0" for="importFileInput" style="cursor: pointer;">
+            <span><i class="bi bi-upload text-pink me-2"></i> Importar copia de seguridad (JSON)</span>
+            <i class="bi bi-chevron-right small text-muted"></i>
+          </label>
+          <input type="file" id="importFileInput" accept=".json" style="display: none;">
+
+          <button type="button" class="btn btn-outline-danger w-100 text-start mt-2" id="btnClearAllData">
+            <i class="bi bi-trash3 me-2"></i> Borrar todos mis datos y reiniciar
+          </button>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ========================================================
+       BARRA DE NAVEGACIÓN INFERIOR FIJA MÓVIL (5 BOTONES)
+       ======================================================== -->
+  <nav class="bottom-nav">
+    <button class="nav-item-btn active" data-nav-view="home" aria-label="Inicio">
+      <i class="bi bi-house-door-fill"></i>
+      <span>Inicio</span>
+    </button>
+
+    <button class="nav-item-btn" data-nav-view="calendar" aria-label="Calendario">
+      <i class="bi bi-calendar-heart-fill"></i>
+      <span>Calendario</span>
+    </button>
+
+    <!-- Botón central Registrar (+) destacado -->
+    <button class="nav-item-btn btn-center-add" data-nav-view="log" aria-label="Registrar">
+      <div class="nav-center-circle">
+        <i class="bi bi-plus"></i>
+      </div>
+      <span>Registrar</span>
+    </button>
+
+    <button class="nav-item-btn" data-nav-view="stats" aria-label="Estadísticas">
+      <i class="bi bi-bar-chart-fill"></i>
+      <span>Estadísticas</span>
+    </button>
+
+    <button class="nav-item-btn" data-nav-view="profile" aria-label="Perfil">
+      <i class="bi bi-person-fill"></i>
+      <span>Perfil</span>
+    </button>
+  </nav>
+
+  <!-- ========================================================
+       MODAL DE ASISTENTE DE BIENVENIDA (ONBOARDING)
+       ======================================================== -->
+  <div class="modal fade" id="onboardingModal" tabindex="-1" aria-labelledby="onboardTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header border-0 pb-0">
+          <h2 class="h5 modal-title fw-bold" id="onboardTitle">Bienvenida a LunaFem ✨</h2>
+        </div>
+        <div class="modal-body pt-3">
+          <!-- Indicador de pasos -->
+          <div class="step-indicator">
+            <div class="step-dot active" id="stepDot1"></div>
+            <div class="step-dot" id="stepDot2"></div>
+            <div class="step-dot" id="stepDot3"></div>
+          </div>
+
+          <!-- Paso 1: Bienvenida y Nombre -->
+          <div class="onboarding-step active" id="onboardStep1">
+            <div class="text-center mb-3">
+              <div class="brand-logo-icon mx-auto mb-2" style="width: 54px; height: 54px; font-size: 1.8rem;">
+                <i class="bi bi-moon-stars-fill"></i>
+              </div>
+              <h3 class="h5 fw-bold">Tu espacio íntimo de bienestar</h3>
+              <p class="small text-muted">
+                Registra tus ciclos, comprende los ritmos de tu cuerpo y estima tus días de fertilidad con una experiencia delicada y privada.
+              </p>
+            </div>
+            <div class="mb-3">
+              <label for="onboardName" class="form-label small fw-bold text-secondary">¿Cómo te gustaría que te llamemos? (opcional)</label>
+              <input type="text" class="form-control rounded-3" id="onboardName" placeholder="Tu nombre o apodo">
+            </div>
+            <button type="button" class="btn btn-luna-primary w-100" id="onboardNext1">
+              Continuar <i class="bi bi-arrow-right ms-1"></i>
+            </button>
+          </div>
+
+          <!-- Paso 2: Última Menstruación -->
+          <div class="onboarding-step" id="onboardStep2">
+            <h3 class="h6 fw-bold mb-2">¿Cuándo inició tu última menstruación?</h3>
+            <p class="small text-muted mb-3">
+              Esta fecha nos permite calcular el día actual de tu ciclo y estimar tus próximas fases.
+            </p>
+            <div class="mb-3">
+              <input type="date" class="form-control form-control-lg rounded-3" id="onboardLastPeriodDate" required>
+            </div>
+            <div class="d-flex gap-2">
+              <button type="button" class="btn btn-light border w-50" id="onboardPrev2">Atrás</button>
+              <button type="button" class="btn btn-luna-primary w-50" id="onboardNext2">Siguiente</button>
+            </div>
+          </div>
+
+          <!-- Paso 3: Patrón de Ciclo Habitual -->
+          <div class="onboarding-step" id="onboardStep3">
+            <h3 class="h6 fw-bold mb-2">Tus hábitos habituales</h3>
+            <p class="small text-muted mb-3">
+              Valores aproximados que luego podrás ajustar siempre que lo desees.
+            </p>
+            <div class="mb-3">
+              <label for="onboardCycleLength" class="form-label small fw-bold text-secondary">Duración habitual del ciclo (días)</label>
+              <input type="number" class="form-control rounded-3" id="onboardCycleLength" value="28" min="20" max="45">
+              <div class="form-text small">Frecuentemente entre 24 y 35 días (media: 28 días).</div>
+            </div>
+            <div class="mb-3">
+              <label for="onboardPeriodLength" class="form-label small fw-bold text-secondary">Duración del sangrado (días)</label>
+              <input type="number" class="form-control rounded-3" id="onboardPeriodLength" value="5" min="2" max="10">
+            </div>
+            <div class="mb-3">
+              <label for="onboardRegularity" class="form-label small fw-bold text-secondary">¿Tus ciclos son regulares?</label>
+              <select class="form-select rounded-3" id="onboardRegularity">
+                <option value="true">Sí, suelen ser regulares</option>
+                <option value="false">No, suelen ser irregulares</option>
+              </select>
+            </div>
+            <div class="d-flex gap-2">
+              <button type="button" class="btn btn-light border w-50" id="onboardPrev3">Atrás</button>
+              <button type="button" class="btn btn-luna-primary w-50" id="onboardFinish">Comenzar ✨</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================
+       MODAL DE DETALLE DEL DÍA EN EL CALENDARIO
+       ======================================================== -->
+  <div class="modal fade" id="dayDetailsModal" tabindex="-1" aria-labelledby="modalDayDateTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <div>
+            <h3 class="h6 modal-title fw-bold" id="modalDayDateTitle">Detalle del Día</h3>
+            <span class="small text-muted" id="modalDayDateSubtitle">YYYY-MM-DD</span>
+          </div>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+        </div>
+        <div class="modal-body">
+          <!-- Indicador de fase -->
+          <div id="modalCycleStatusBadge"></div>
+
+          <!-- Síntomas -->
+          <div class="luna-card p-3 mb-3 bg-light border-0">
+            <h4 class="h6 fw-bold mb-2"><i class="bi bi-heart-pulse text-pink me-1"></i> Síntomas y Notas</h4>
+            <div id="modalSymptomsContainer">
+              <span class="text-muted small">Cargando...</span>
+            </div>
+          </div>
+
+          <!-- Ánimo y Bienestar -->
+          <div class="luna-card p-3 mb-0 bg-light border-0">
+            <h4 class="h6 fw-bold mb-2"><i class="bi bi-emoji-smile text-purple me-1"></i> Estado Emocional & Energía</h4>
+            <div id="modalMoodContainer">
+              <span class="text-muted small">Cargando...</span>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer justify-content-between">
+          <button type="button" class="btn btn-sm btn-outline-danger" id="modalDeleteDayBtn" style="display: none;">
+            <i class="bi bi-trash"></i> Eliminar
+          </button>
+          <div class="d-flex gap-2 ms-auto">
+            <button type="button" class="btn btn-sm btn-light border" data-bs-dismiss="modal">Cerrar</button>
+            <button type="button" class="btn btn-sm btn-luna-primary" id="modalEditDayBtn">
+              <i class="bi bi-pencil-square"></i> Registrar / Editar
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts: Bootstrap 5.3 & Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+
+  <!-- Scripts propios de LunaFem -->
+  <script src="js/storage.js"></script>
+  <script src="js/cycle.js"></script>
+  <script src="js/calendar.js"></script>
+  <script src="js/statistics.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
